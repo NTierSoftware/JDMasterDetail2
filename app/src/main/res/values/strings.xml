@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">JDMasterDetail1</string>
+    <string name="title_movie_detail">movie Detail</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="btnLoad">LOAD</string>
+    <string name="btnDel">DELETE</string>
+    <string name="emptyList">Error\nThere are no more movies to display</string>
+    <string name="deleteAll">Long click to delete all</string>
+
+</resources>
