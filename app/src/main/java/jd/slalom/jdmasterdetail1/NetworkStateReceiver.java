@@ -1,3 +1,6 @@
+// Author: John "JD" Donaldson, April 2016
+// Resume: https://drive.google.com/open?id=1Pzf7oeqrpIEmzb0ZU3aRPRkRh9Us3ge0AkfsbUer3KM
+
 // http://stackoverflow.com/questions/6169059/android-event-for-internet-connectivity-state-change
 package jd.slalom.jdmasterdetail1;// Created by John Donaldson, NTier Software Engineering on 4/16/2016.
 

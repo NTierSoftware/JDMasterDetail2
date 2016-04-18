@@ -1,3 +1,5 @@
+// Author: John "JD" Donaldson, April 2016
+// Resume: https://drive.google.com/open?id=1Pzf7oeqrpIEmzb0ZU3aRPRkRh9Us3ge0AkfsbUer3KM
 package jd.slalom.jdmasterdetail1;
 
 import android.os.*;
