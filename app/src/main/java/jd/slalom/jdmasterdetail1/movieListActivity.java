@@ -101,6 +101,7 @@ private NetworkStateReceiver networkStateReceiver;
 	setSupportActionBar( toolbar );
 	toolbar.setTitle( getTitle() );
 
+/*
 	FloatingActionButton fab = (FloatingActionButton) findViewById( R.id.fab );
 	fab.setOnClickListener( new View.OnClickListener(){
 		@Override public void onClick( View view ){
@@ -108,6 +109,7 @@ private NetworkStateReceiver networkStateReceiver;
 			        .setAction( "Action", null ).show();
 		}//onClick
 	} );
+*/
 
 	recyclerView = (RecyclerView) findViewById( R.id.movie_list );
 
@@ -183,9 +185,10 @@ public void onNetworkAvailable(){ btnLoadClicked(null); }
 
 public void onNetworkUnavailable(){
 	btnLoad.setVisibility( View.INVISIBLE );
-	btnDel.setVisibility( View.INVISIBLE );
+	btnDel.setVisibility ( View.INVISIBLE );
 	Toast.makeText( this, "network Unavailable!!\nPlease Enable the network to Load!", Toast.LENGTH_SHORT ).show();
-	mAppController.cancelPendingRequests( AppController.TAG );
+	mAppController.cancelPendingRequests();
+	clearProgress();
 }
 
 
@@ -256,6 +259,7 @@ public void btnDelClicked( View view ){
 	mMovieList.remove( 0 );
 	mMovieAdapter.notifyDataSetChanged();
 	isEmpty();
+	//recyclerView.
 }//btnDelClicked
 
 private boolean isEmpty(){

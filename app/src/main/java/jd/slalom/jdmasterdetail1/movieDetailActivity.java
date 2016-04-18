@@ -45,14 +45,25 @@ public class movieDetailActivity extends AppCompatActivity{
 // (e.g. when rotating the screen from portrait to landscape). In this case, the fragment will automatically be re-added
 // to its container so we don't need to manually add it.
 // http://developer.android.com/guide/components/fragments.html
-	if (savedInstanceState == null) {
+
+
+
+
+		if (savedInstanceState == null) {
 		// Create the detail fragment and add it to the activity using a fragment transaction.
 		movieDetailFragment fragment = new movieDetailFragment();
 		fragment.setArguments( getIntent().getExtras() );//bundle
+
 		getSupportFragmentManager().beginTransaction()
 				.add(R.id.movie_detail_container, fragment)
 				.commit();
 	}
+
+}//onCreate
+
+
+@Override protected void onResume(){
+	super.onResume();
 }
 
 @Override public boolean onOptionsItemSelected(MenuItem item){
@@ -69,4 +80,4 @@ public class movieDetailActivity extends AppCompatActivity{
 	}
 return super.onOptionsItemSelected(item);
 }
-}
+}//class movieDetailActivity

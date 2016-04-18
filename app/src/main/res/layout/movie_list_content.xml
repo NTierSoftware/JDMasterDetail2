@@ -9,15 +9,15 @@
         android:id="@+id/image_url"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginRight="8dp"/>
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="8dp"/>
 
     <TextView
         android:id="@+id/movie_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/image_url"
-        android:layout_toRightOf="@+id/image_url"
+        android:layout_toEndOf="@+id/image_url"
 
         android:textSize="@dimen/movie_name"
         android:textStyle="bold" />
