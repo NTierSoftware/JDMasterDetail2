@@ -23,17 +23,16 @@ public class MovieAdapter extends EmptyRecyclerView.Adapter< MovieAdapter.ViewHo
 movieListActivity mActivity;
 static private final Logger mLog = getLogger( MovieAdapter.class );
 
-private List< Movie > mMovies;
+private List< Movie > mMovies  = new ArrayList<>();
 private ImageLoader mImageLoader = AppController.getInstance().getImageLoader();
 private int curPosition = 0;
 
-//public MovieAdapter( movieListActivity activity, List< Movie > movies ){
 public MovieAdapter( movieListActivity activity ){
 	this.mActivity = activity;
-	this.mMovies = new ArrayList<>();
 }//cstr
 
 //public int getCount(){ return mMovies.size(); }
+//@Override public long getItemId( int position ){ return position; }
 
 public Object getItem( int position ){
 	return ( position <= RecyclerView.NO_POSITION || mMovies.size() <= 0 ) ? null : mMovies.get(
@@ -80,9 +79,6 @@ public Object getItem( int position ){
 	} );
 }//onBindViewHolder
 
-
-//@Override public long getItemId( int position ){ return position; }
-
 @Override public int getItemCount(){ return mMovies.size(); }
 
 public int setPosition( int position ){
@@ -96,10 +92,12 @@ public void clear(){
 	notifyDataSetChanged();
 }//clear()
 
+/*
 public void add( Movie aMovie ){
 	mMovies.add( aMovie );
 	notifyDataSetChanged();
 }
+*/
 
 public boolean isEmpty(){return mMovies.isEmpty();}
 
@@ -108,6 +106,7 @@ public int getCurPosition(){return curPosition;}
 public int removeCurItem(){
 	return removeItem( curPosition );
 }
+
 
 private int chkPosition( int position ){
 	int size = mMovies.size();
@@ -131,9 +130,13 @@ private int removeItem( int position ){
 return setPosition( position );
 }//removeItem
 
-public class ViewHolder extends RecyclerView.ViewHolder{//implements View.OnClickListener
-//	private final Logger mLog = getLogger(ViewHolder.class);
+public void setList(List< Movie > aMovies){
+	mMovies = aMovies;
+	notifyDataSetChanged();
+}
+public List< Movie > getList(){return mMovies;}
 
+public class ViewHolder extends RecyclerView.ViewHolder{//implements View.OnClickListener
 	public final View mView;
 	public final TextView mMovienameView, mRatingView;
 	public final NetworkImageView mImageurl;

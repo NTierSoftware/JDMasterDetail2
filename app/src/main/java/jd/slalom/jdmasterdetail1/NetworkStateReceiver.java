@@ -2,7 +2,7 @@
 // Resume: https://drive.google.com/open?id=1Pzf7oeqrpIEmzb0ZU3aRPRkRh9Us3ge0AkfsbUer3KM
 
 // http://stackoverflow.com/questions/6169059/android-event-for-internet-connectivity-state-change
-package jd.slalom.jdmasterdetail1;// Created by John Donaldson, NTier Software Engineering on 4/16/2016.
+package jd.slalom.jdmasterdetail1;
 
 import android.content.*;
 import android.net.*;
@@ -17,13 +17,12 @@ protected List< NetworkStateReceiverListener > listeners;
 protected Boolean connected;
 
 public interface NetworkStateReceiverListener{
-	public void onNetworkAvailable();
-
-	public void onNetworkUnavailable();
+	void onNetworkAvailable();
+	void onNetworkUnavailable();
 }
 
 public NetworkStateReceiver(){
-	listeners = new ArrayList< NetworkStateReceiverListener >();
+	listeners = new ArrayList<>();
 	connected = null;
 }
 
@@ -49,7 +48,7 @@ public void addListener( NetworkStateReceiverListener l ){
 
 public void removeListener( NetworkStateReceiverListener l ){ listeners.remove( l ); }
 
-private void notifyStateToAll(){
+public void notifyStateToAll(){
 	for ( NetworkStateReceiverListener listener : listeners )
 		notifyState( listener );
 }

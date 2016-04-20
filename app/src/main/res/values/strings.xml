@@ -7,5 +7,6 @@
     <string name="btnDel">DELETE</string>
     <string name="emptyList">Error\nThere are no more movies to display</string>
     <string name="deleteAll">Long click to delete all</string>
+    <string name="noNet">network Unavailable!!\nPlease Enable the network to Load!</string>
 
 </resources>

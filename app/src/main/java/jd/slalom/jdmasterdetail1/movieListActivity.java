@@ -37,11 +37,9 @@ Initially load the JSON into a data store and drive the UI from the data store.
 
 package jd.slalom.jdmasterdetail1;
 
-import android.app.*;
 import android.content.*;
-import android.net.ConnectivityManager;
+import android.net.*;
 import android.os.*;
-import android.support.design.widget.*;
 import android.support.v7.app.*;
 import android.support.v7.widget.*;
 import android.support.v7.widget.Toolbar;
@@ -62,21 +60,20 @@ import ch.qos.logback.classic.util.*;
 import jd.slalom.jdmasterdetail1.NetworkStateReceiver.*;
 
 
-import static android.widget.Toast.*;
-
-
 // An activity representing a list of movies. This activity has different presentations for handset and tablet-size devices.
 // On handsets, the activity presents a list of items, which when touched, lead to a {@link movieDetailActivity} representing
 // item details. On tablets, the activity presents the list of items and item details side-by-side using two vertical panes.
 public class movieListActivity extends AppCompatActivity implements NetworkStateReceiverListener{
+
 //Whether or not the activity is in two-pane mode, i.e. running on a tablet device.
 public boolean mTwoPane;
 
 static private final Logger mLog = LoggerFactory.getLogger( movieListActivity.class );
 static private final LoggerContext mLoggerContext = (LoggerContext) LoggerFactory
 		.getILoggerFactory();
-static private final ContextInitializer mContextInitializer = new ContextInitializer(
-		mLoggerContext );
+static private final ContextInitializer mContextInitializer =
+		new ContextInitializer(	mLoggerContext );
+
 static private final String HTTPURL = "http://private-05248-rottentomatoes.apiary-mock.com/";
 static private final JSONObject GET = null;
 
@@ -90,9 +87,8 @@ private Toast mToast;
 
 @Override public void onCreate( Bundle savedInstanceState ){
 	super.onCreate( savedInstanceState );
+	mToast = Toast.makeText( this, "onCreate", Toast.LENGTH_SHORT );
 
-	networkStateReceiver = new NetworkStateReceiver();
-	networkStateReceiver.addListener( this );
 
 	setContentView( R.layout.activity_movie_list );
 
@@ -100,21 +96,12 @@ private Toast mToast;
 	setSupportActionBar( toolbar );
 	toolbar.setTitle( getTitle() );
 
-/*
-	FloatingActionButton fab = (FloatingActionButton) findViewById( R.id.fab );
-	fab.setOnClickListener( new View.OnClickListener(){
-		@Override public void onClick( View view ){
-			Snackbar.make( view, "Replace with your own action", Snackbar.LENGTH_SHORT )
-			        .setAction( "Action", null ).show();
-		}//onClick
-	} );
-*/
-
 
 	mMovieAdapter = new MovieAdapter( this );
 	mAppController.setMovieAdapter( mMovieAdapter );
 
 	recyclerView = (EmptyRecyclerView) findViewById( R.id.movie_list );
+	assert recyclerView != null;
 	recyclerView.setAdapter( mMovieAdapter );
 	recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -122,20 +109,24 @@ private Toast mToast;
 // The detail container view will be present only in the large-screen layouts (res/values-w900dp).
 // If this view is present, then the activity should be in two-pane mode.
 	mTwoPane = ( findViewById( R.id.movie_detail_container ) != null );
-	mToast = new Toast( this );
+
 	btnLoad = (Button) findViewById( R.id.btnLoad );
 	btnDel = (Button) findViewById( R.id.btnDel );
 	btnDel.setOnLongClickListener( new View.OnLongClickListener(){
 		@Override public boolean onLongClick( View v ){
 			if ( !isEmpty() ){
 				mMovieAdapter.clear();
-				//mMovieAdapter.notifyDataSetChanged();
 				isEmpty();
 			}
 			return true;
 		}//onLongClick
 	}//View.OnLongClickListener
 	);//btnDel.setOnLongClickListener
+
+
+	networkStateReceiver = new NetworkStateReceiver();
+	networkStateReceiver.addListener( this );
+	networkStateReceiver.notifyStateToAll();
 }//onCreate
 
 /* @Override public boolean onCreateOptionsMenu(Menu menu){
@@ -175,38 +166,33 @@ return true;
 }// onStop()
 
 
-@Override public void onDestroy(){
-	super.onDestroy();
-	mLog.trace( "onDestroy():\t" );
-	clearProgress();
-	mLoggerContext.stop();//flush log
+public void onNetworkAvailable(){
+	mToast.setDuration( Toast.LENGTH_SHORT );
+	btnLoadClicked(null);
 }
-
-
-public void onNetworkAvailable(){ btnLoadClicked(null); }
 
 public void onNetworkUnavailable(){
 	btnLoad.setVisibility( View.INVISIBLE );
 	btnDel.setVisibility ( View.INVISIBLE );
-	mToast.cancel();
-	mToast.makeText( this, "network Unavailable!!\nPlease Enable the network to Load!", Toast.LENGTH_SHORT ).show();
 	mAppController.cancelPendingRequests();
 	clearProgress();
+	mToast.setText(getResources().getString( R.string.noNet )  );
+	mToast.show();
 }
 
 
 //http://www.androidhive.info/2014/07/android-custom-listview-with-image-and-text-using-volley/
 public void btnLoadClicked(View aView){
-	final Activity toastActivity = this;
-//mLog.debug("btnLoadClicked");
 	progress.setMessage( "Loading. . ." );
 	progress.show();
 
 	JsonObjectRequest request = new JsonObjectRequest( HTTPURL, GET,
                new Response.Listener< JSONObject >(){
                    public void onResponse(
-                           JSONObject response ){
-                       int numMovies;
+                   JSONObject response ){
+	                   int numMovies;
+	                   mMovieAdapter.clear();
+	                   List< Movie > mMovies = mMovieAdapter.getList();
                        try{ //to view JSON use http://codebeautify.org/jsonviewer#
                            JSONArray moviesArr = response.getJSONArray( "movies" );
 
@@ -214,10 +200,8 @@ public void btnLoadClicked(View aView){
                            mLog.info( "JSON:\t" + moviesArr.toString() );
 
                            numMovies = moviesArr.length();
-	                       mMovieAdapter.clear();
-	                       //mMovieAdapter.notifyDataSetChanged();
                            for ( int i = 0; i < numMovies; i++ ){
-	                           mMovieAdapter.add( Movie.fromJson( moviesArr.getJSONObject(i ) ) );
+	                           mMovies.add( Movie.fromJson( moviesArr.getJSONObject(i ) ) );
                            }//for
                        }//try
                        catch ( JSONException X ){
@@ -225,17 +209,15 @@ public void btnLoadClicked(View aView){
 	                       mMovieAdapter.clear();
                        }
 
-                       //mMovieAdapter.notifyDataSetChanged();
-
+	                   mMovieAdapter.setList(mMovies);
                        if ( !isEmpty() ) {
 	                       btnLoad.setVisibility( View.INVISIBLE );
 	                       mMovieAdapter.setPosition( 0 );
                        }
                        clearProgress();
-	                   mToast.cancel();
-	                   mToast.makeText( toastActivity,
-                                 Integer.toString( mMovieAdapter.getItemCount() ) + " movies loaded.",
-                                 LENGTH_SHORT ).show();
+
+	                   mToast.setText(  Integer.toString( mMovieAdapter.getItemCount() ) + " movies loaded.");
+	                   mToast.show();
 
                    }//onResponse
                }//Listener
@@ -259,25 +241,32 @@ public void btnDelClicked( View view ){
 	btnLoad.setVisibility( View.VISIBLE );
 
 	if ( isEmpty() ) return;
-
-	makeText( this, getResources().getString( R.string.deleteAll ), LENGTH_SHORT ).show();
+	mToast.setText(  getResources().getString( R.string.deleteAll ) );
+	mToast.show();
 
 	int pos = mMovieAdapter.removeCurItem();
 	if ( pos > RecyclerView.NO_POSITION )  recyclerView.removeViewAt( pos );
-	//mMovieAdapter.notifyDataSetChanged();
-	isEmpty();
 
+	isEmpty();
 }//btnDelClicked
+
+@Override public void onDestroy(){
+	super.onDestroy();
+	mLog.trace( "onDestroy():\t" );
+	clearProgress();
+	recyclerView.close();
+	networkStateReceiver.removeListener(this);
+	mLoggerContext.stop();//flush log
+}
 
 private boolean isEmpty(){
 	if ( mMovieAdapter.isEmpty() ){
 		btnDel.setVisibility( View.INVISIBLE );
-		mToast.cancel();
-		makeText( this,
-		          getResources().getString( R.string.emptyList ),
-		          LENGTH_SHORT ).show();
-
 		btnLoad.setVisibility( View.VISIBLE );
+
+		mToast.setText(  getResources().getString( R.string.emptyList ) );
+		mToast.show();
+
 		return true;
 	}
 	btnDel.setVisibility( View.VISIBLE );

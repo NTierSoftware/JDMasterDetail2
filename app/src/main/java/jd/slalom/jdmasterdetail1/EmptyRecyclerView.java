@@ -73,4 +73,15 @@ private boolean checkIfEmpty(){
 	}
 return retVal;
 }//checkIfEmpty()
+
+public void close(){
+	try{
+		setEnabled( false );
+		destroyDrawingCache();
+		removeAllViews();
+		getAdapter().unregisterAdapterDataObserver( observer );
+	}
+	catch ( Exception ignore ){}
+}//close
+
 }
