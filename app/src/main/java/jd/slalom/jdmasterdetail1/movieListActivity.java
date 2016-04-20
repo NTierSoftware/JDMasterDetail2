@@ -232,7 +232,7 @@ public void btnLoadClicked(View aView){
 	                       mMovieAdapter.setPosition( 0 );
                        }
                        clearProgress();
-	                   mToast.cancel(); mToast.
+	                   mToast.cancel();
 	                   mToast.makeText( toastActivity,
                                  Integer.toString( mMovieAdapter.getItemCount() ) + " movies loaded.",
                                  LENGTH_SHORT ).show();

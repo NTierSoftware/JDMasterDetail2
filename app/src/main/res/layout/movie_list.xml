@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
 <android.support.v7.widget.RecyclerView android:id="@+id/movie_list"
+-->
+<jd.slalom.jdmasterdetail1.EmptyRecyclerView android:id="@+id/movie_list"
                                         android:name="jd.slalom.jdmasterdetail1.movieListFragment"
                                         xmlns:android="http://schemas.android.com/apk/res/android"
                                         xmlns:app="http://schemas.android.com/apk/res-auto"

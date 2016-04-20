@@ -13,7 +13,10 @@
 
     <!-- This layout is a two-pane layout for the movies master/detail flow. -->
 
+<!--
     <android.support.v7.widget.RecyclerView android:id="@+id/movie_list"
+-->
+    <jd.slalom.jdmasterdetail1.EmptyRecyclerView android:id="@+id/movie_list"
                                             android:name="jd.slalom.jdmasterdetail1.movieListFragment"
                                             xmlns:android="http://schemas.android.com/apk/res/android"
                                             xmlns:tools="http://schemas.android.com/tools"
