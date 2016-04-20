@@ -13,6 +13,10 @@ import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.widget.*;
+
+import org.slf4j.*;
+
 
 /**
  * An activity representing a single movie detail screen. This
@@ -21,7 +25,7 @@ import android.view.MenuItem;
  * in a {@link movieListActivity}.
  */
 public class movieDetailActivity extends AppCompatActivity{
-
+static private final Logger mLog = LoggerFactory.getLogger( movieListActivity.class );
 @Override protected void onCreate(Bundle savedInstanceState){
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.activity_movie_detail);
@@ -46,25 +50,33 @@ public class movieDetailActivity extends AppCompatActivity{
 // to its container so we don't need to manually add it.
 // http://developer.android.com/guide/components/fragments.html
 
-
-
+//	String nullcheck = "savedInstanceState: ";
+	Bundle check;
 
 		if (savedInstanceState == null) {
 		// Create the detail fragment and add it to the activity using a fragment transaction.
 		movieDetailFragment fragment = new movieDetailFragment();
+
 		fragment.setArguments( getIntent().getExtras() );//bundle
 
 		getSupportFragmentManager().beginTransaction()
 				.add(R.id.movie_detail_container, fragment)
 				.commit();
-	}
 
+//		nullcheck += "NOT null";
+			check = 	getIntent().getExtras();
+		}
+	else{
+			check = savedInstanceState;
+//		nullcheck += "null";
+		}
+
+	int pos = check.getInt( "pos" );
+//	Toast.makeText( this, nullcheck + " pos: " + pos, Toast.LENGTH_SHORT ).show();
 }//onCreate
 
 
-@Override protected void onResume(){
-	super.onResume();
-}
+//@Override protected void onResume(){ super.onResume(); }
 
 @Override public boolean onOptionsItemSelected(MenuItem item){
 	int id = item.getItemId();

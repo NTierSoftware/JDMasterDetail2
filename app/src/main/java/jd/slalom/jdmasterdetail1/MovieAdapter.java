@@ -4,6 +4,7 @@ package jd.slalom.jdmasterdetail1;
 
 import android.content.*;
 import android.os.*;
+import android.support.v4.app.*;
 import android.support.v7.widget.*;
 import android.view.*;
 import android.widget.*;
@@ -18,21 +19,26 @@ import java.util.*;
 import static org.slf4j.LoggerFactory.*;
 
 
-public class MovieAdapter extends RecyclerView.Adapter< MovieAdapter.ViewHolder >{
+public class MovieAdapter extends EmptyRecyclerView.Adapter< MovieAdapter.ViewHolder >{
+movieListActivity mActivity;
 static private final Logger mLog = getLogger( MovieAdapter.class );
 
-private movieListActivity mActivity;
 private List< Movie > mMovies;
 private ImageLoader mImageLoader = AppController.getInstance().getImageLoader();
+private int curPosition = 0;
 
-public MovieAdapter( movieListActivity activity, List< Movie > movies ){
+//public MovieAdapter( movieListActivity activity, List< Movie > movies ){
+public MovieAdapter( movieListActivity activity ){
 	this.mActivity = activity;
-	this.mMovies = movies;
+	this.mMovies = new ArrayList<>();
+}//cstr
+
+//public int getCount(){ return mMovies.size(); }
+
+public Object getItem( int position ){
+	return ( position <= RecyclerView.NO_POSITION || mMovies.size() <= 0 ) ? null : mMovies.get(
+			chkPosition( position ) );
 }
-
-public int getCount(){ return mMovies.size(); }
-
-public Object getItem( int position ){ return mMovies.get( position ); }
 
 @Override public ViewHolder onCreateViewHolder( ViewGroup parent, int viewType ){
 	View view = LayoutInflater.from( mActivity )
@@ -50,11 +56,10 @@ public Object getItem( int position ){ return mMovies.get( position ); }
 
 	holder.mView.setOnClickListener( new View.OnClickListener(){
 		@Override public void onClick( View v ){
-			int pos = ( position == RecyclerView.NO_POSITION ) ? 0 : position;
+			int pos = ( position <= RecyclerView.NO_POSITION ) ? 0 : position;
 
 			if ( mActivity.mTwoPane ){
 				Bundle bundle = new Bundle();
-
 				bundle.putInt( "pos", pos );
 
 				movieDetailFragment fragment = new movieDetailFragment();
@@ -62,12 +67,12 @@ public Object getItem( int position ){ return mMovies.get( position ); }
 				mActivity.getSupportFragmentManager().beginTransaction()
 				         .replace( R.id.movie_detail_container, fragment )
 				         .commit();
+
 			}//if
 			else{
 				Context context = v.getContext();
 				Intent intent = new Intent( context, movieDetailActivity.class )
 						.putExtra( "pos", pos );
-//						.putExtra( Movie.parcelKey, holder.mItem );
 
 				context.startActivity( intent );
 			}//else
@@ -76,11 +81,57 @@ public Object getItem( int position ){ return mMovies.get( position ); }
 }//onBindViewHolder
 
 
-@Override public long getItemId( int position ){ return position; }
+//@Override public long getItemId( int position ){ return position; }
 
 @Override public int getItemCount(){ return mMovies.size(); }
 
-public class ViewHolder extends RecyclerView.ViewHolder{
+public int setPosition( int position ){
+	curPosition = chkPosition( position );
+	return curPosition;
+}//setPosition
+
+
+public void clear(){
+	mMovies.clear();
+	notifyDataSetChanged();
+}//clear()
+
+public void add( Movie aMovie ){
+	mMovies.add( aMovie );
+	notifyDataSetChanged();
+}
+
+public boolean isEmpty(){return mMovies.isEmpty();}
+
+public int getCurPosition(){return curPosition;}
+
+public int removeCurItem(){
+	return removeItem( curPosition );
+}
+
+private int chkPosition( int position ){
+	int size = mMovies.size();
+	//When the size changes update the position.
+	if (size > 0) position = Math.min( Math.max( position, 0 ), size -1 );
+	else position = RecyclerView.NO_POSITION;
+
+return position;
+}
+
+private int removeItem( int position ){
+	if ( mActivity.mTwoPane ){
+		FragmentManager mgr = mActivity.getSupportFragmentManager();
+		Fragment fragment = mgr.findFragmentById( R.id.movie_detail_container );
+		mgr.beginTransaction().remove( fragment ).commit();
+	}
+	position = chkPosition( position );
+	mMovies.remove( position );
+	notifyItemRemoved( position );
+	notifyDataSetChanged();
+return setPosition( position );
+}//removeItem
+
+public class ViewHolder extends RecyclerView.ViewHolder{//implements View.OnClickListener
 //	private final Logger mLog = getLogger(ViewHolder.class);
 
 	public final View mView;
@@ -105,5 +156,4 @@ public class ViewHolder extends RecyclerView.ViewHolder{
 
 	@Override public String toString(){ return "ViewHolder:\t" + mItem.toString(); }
 }//class ViewHolder
-
 }//MovieAdapter
