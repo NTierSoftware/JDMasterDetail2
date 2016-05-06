@@ -2,33 +2,9 @@
 // Resume: https://drive.google.com/open?id=1Pzf7oeqrpIEmzb0ZU3aRPRkRh9Us3ge0AkfsbUer3KM
 // modified from Android Studio Master Detail template
 
-/* MOBILE CODE CHALLENGE
-		You're free to use any resource (internet / libraries / etc), but try to use as much native code as possible (Java for Android, Swift/Objective-C for iOS).
-
-		If you use 3rd party library/code/tools, please comment where it is from and why it was used.
-
-		(Note that these instructions are written agnostically since the challenge is intended to be for iOS or Android).
-
-		The purpose of this exercise is to build a simple native app (iOS or Android) that pulls down a list of movies from some static JSON on the web and displays it. There are not detailed UI instructions included. Please feel free to include as much UI flare as you feel is appropriate in order to show off any design and interaction skills you might possess.
-
-NOTE that there are multiple opportunities to expand on the requirements of this exercise. Feel free to do so as time permits and if you feel it is appropriate. The instructions are in some cases left deliberately ambiguous in order to allow you some creative flexibility.
-
-The JSON data can be found here: http://private-05248-rottentomatoes.apiary-mock.com/ .
-
-INSTRUCTIONS:
-1) Create an empty app.
-2) Create a "LOAD" button on the screen that downloads the JSON file on tap. Log the JSON to the console.
-3) Style the button as you feel appropriate.
-4) Display the "movie_name" of the JSON items in a table or grid format (You can choose what you want to use) underneath the button.
-5) Download and display the "image_url" images next to the name (or anywhere you feel is appropriate).
-6) When the table (or grid) cell is tapped, load a new screen and display the complete details of the record tapped (movie_name, image_url, rating, description).
-7) Allow for normal / proper navigation back to the list screen.
-8) Update the screen layout. Next to the original load button, add a 2nd button so that the two buttons have equal widths, filling the width of the screen. Name the button "DELETE".
-9) When the 2nd button is tapped, delete the 1st item in the table / grid. You should be able to continuously tap this button, until the list is empty.
-10) When the table / grid is empty, display a popup with title:"Error" message: "There are no more movies to display".
-
-BONUS POINTS:
-Initially load the JSON into a data store and drive the UI from the data store.
+/*
+A simple native app that pulls down a list of movies from static JSON on the web and displays it.
+Initially loads the JSON into a data store and drive the UI from the data store.
 */
 
 //3rd party library/code/tools used:
